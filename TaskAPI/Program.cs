@@ -1,15 +1,27 @@
+using Microsoft.EntityFrameworkCore;
+using TaskAPI.Abstractions;
+using TaskAPI.Database;
+using TaskAPI.Repositories;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
+builder.Services.AddDbContext<ApplicationContext>(options =>
+{
+    options.UseSqlServer(connectionString);
+});
+
+builder.Services.AddTransient<IDoctorRepository, DoctorRepository>();
+builder.Services.AddTransient<IPatientRepository, PatientRepository>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();

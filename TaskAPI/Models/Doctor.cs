@@ -8,4 +8,13 @@
         public Specialization Specialization { get; set; }
         public Section? Section { get; set; }
     }
+
+    public enum DoctorSort
+    {
+        Id,
+        FIO,
+        Cabinet,
+        Specialization,
+        Section,
+    }
 }
